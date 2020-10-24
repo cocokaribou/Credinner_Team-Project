@@ -23,8 +23,8 @@
 ![](開発工程図.png)
 
 ## 5. Teammates
-* [Youngin Lee] (https://github.com/cocokaribou)
-* [Jacheol Ko] (https://github.com/KOJAECHEOL)
-* [Junwoo Kim] (https://github.com/kjwit)
-* [Nakyoung Lee] (https://github.com/nakyounglee06)
-* [Junga Lim] (https://github.com/Junga-Im)
+* [Youngin Lee](https://github.com/cocokaribou)
+* [Jacheol Ko](https://github.com/KOJAECHEOL)
+* [Junwoo Kim](https://github.com/kjwit)
+* [Nakyoung Lee](https://github.com/nakyounglee06)
+* [Junga Lim](https://github.com/Junga-Im)
