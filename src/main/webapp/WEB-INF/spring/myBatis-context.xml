@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">  
+                        
+    <bean id="dataSourceMain" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+        <property name="driverClassName" value="oracle.jdbc.driver.OracleDriver"/>
+        <property name="url" value="jdbc:oracle:thin:@localhost:1521:XE"/>
+        <property name="username" value="hr"/>
+        <property name="password" value="hr"/>
+    </bean>
+    
+    <bean id="dataSourceMainLog" class="net.sf.log4jdbc.Log4jdbcProxyDataSource">
+        <constructor-arg ref="dataSourceMain" />
+        <property name="logFormatter">
+            <bean class="net.sf.log4jdbc.tools.Log4JdbcCustomFormatter">
+                <property name="loggingType" value="MULTI_LINE" />
+                <property name="sqlPrefix" value="SQL         :  "/>
+            </bean>
+        </property>
+    </bean>
+    
+    <bean id="sqlSessionFactoryMain" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSourceMainLog" />
+        <property name="mapperLocations" value="classpath:/mapper/**/*_SQL.xml" />
+    </bean>   
+    
+    <bean id="sqlSessionTemplateMain" class="org.mybatis.spring.SqlSessionTemplate">
+        <constructor-arg ref="sqlSessionFactoryMain" /> 
+    </bean>
+	
+	<bean id="MainService" class="com.dc.Credinner.Service.MainService" >		
+		<property name="sqlSessionFactory">
+			<ref bean="sqlSessionFactoryMain"/> 
+		</property>
+	</bean>	
+</beans>

@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+<mapper namespace="MainQuery">
+    <select id="GetUser" parameterType="Hashmap" resultType="Hashmap">    
+        SELECT * FROM MEMBER WHERE MB_ID = #{id, jdbcType=VARCHAR}		
+    </select>
+    
+    <select id="getUserDataForEmail" parameterType="Hashmap" resultType="Hashmap">    
+        SELECT * FROM MEMBER WHERE MB_EMAIL = #{email, jdbcType=VARCHAR}		
+    </select>
+    
+    <select id="getListReivewPhoto" parameterType="Hashmap" resultType="Hashmap">    
+        SELECT * FROM REVIEW_PHOTO WHERE RV_NUM = #{RV_NUM}		
+    </select>
+    
+    <select id="getReivewPhoto" parameterType="Hashmap" resultType="Hashmap">    
+        SELECT * FROM REVIEW_PHOTO WHERE RV_PHOTO_NUM = #{RV_PHOTO_NUM}		
+    </select>
+    
+    <select id="getListReivewForResNum" parameterType="Hashmap" resultType="Hashmap">    
+         SELECT REVIEW.*, MEMBER.MB_NICK, MEMBER.MB_RANK, DBMS_LOB.SUBSTR((SELECT WM_CONCAT(MB_KW_NAME) MB_KW_NAME FROM MEMBER_KEYWORD WHERE REVIEW.MB_NUM = MEMBER_KEYWORD.MB_NUM), 1000, 1) AS KW_NAME
+         ,TO_CHAR(REVIEW.RV_DATE, 'YYYY-MM-DD') RV_DATE_STRING
+         ,(SELECT COUNT(*) FROM REVIEW C_REVIEW WHERE REVIEW.MB_NUM = C_REVIEW.MB_NUM) REVIEW_COUNT 
+  		 FROM REVIEW INNER JOIN MEMBER ON MEMBER.MB_NUM = REVIEW.MB_NUM WHERE REVIEW.RES_NUM = #{RES_NUM}
+    </select>
+    
+    <select id="getReivewForRvNum" parameterType="Hashmap" resultType="Hashmap">    
+         SELECT REVIEW.*, MEMBER.MB_NICK, MEMBER.MB_RANK, DBMS_LOB.SUBSTR((SELECT WM_CONCAT(MB_KW_NAME) MB_KW_NAME FROM MEMBER_KEYWORD WHERE REVIEW.MB_NUM = MEMBER_KEYWORD.MB_NUM), 1000, 1) AS KW_NAME
+         ,TO_CHAR(REVIEW.RV_DATE, 'YYYY-MM-DD') RV_DATE_STRING 
+         ,(SELECT COUNT(*) FROM REVIEW C_REVIEW WHERE REVIEW.MB_NUM = C_REVIEW.MB_NUM) REVIEW_COUNT         
+  		 FROM REVIEW INNER JOIN MEMBER ON MEMBER.MB_NUM = REVIEW.MB_NUM WHERE REVIEW.RV_NUM = #{RV_NUM}
+    </select>
+    
+    <select id="getReivewForMbID" parameterType="Hashmap" resultType="Hashmap">    
+         SELECT REVIEW.*, MEMBER.MB_NICK, MEMBER.MB_RANK, DBMS_LOB.SUBSTR((SELECT WM_CONCAT(MB_KW_NAME) MB_KW_NAME FROM MEMBER_KEYWORD WHERE REVIEW.MB_NUM = MEMBER_KEYWORD.MB_NUM), 1000, 1) AS KW_NAME 
+         ,TO_CHAR(REVIEW.RV_DATE, 'YYYY-MM-DD') RV_DATE_STRING
+         ,(SELECT COUNT(*) FROM REVIEW C_REVIEW WHERE REVIEW.MB_NUM = C_REVIEW.MB_NUM) REVIEW_COUNT FROM REVIEW INNER JOIN MEMBER ON MEMBER.MB_NUM = REVIEW.MB_NUM 
+         WHERE MEMBER.MB_ID = #{MB_ID}
+    </select>
+    
+    <select id="getMemberInfo" parameterType="Hashmap" resultType="Hashmap">    
+         SELECT MB_NICK, MB_NAME, REG_DATE
+		,(SELECT COUNT(*) FROM REVIEW C_REVIEW WHERE MEMBER.MB_NUM = C_REVIEW.MB_NUM) REVIEW_COUNT
+		, DBMS_LOB.SUBSTR((SELECT WM_CONCAT(MB_KW_NAME) MB_KW_NAME FROM MEMBER_KEYWORD WHERE MEMBER.MB_NUM = MEMBER_KEYWORD.MB_NUM), 1000, 1) AS KW_NAME 
+		FROM MEMBER
+ 		 WHERE MB_ID = #{MB_ID}
+    </select>
+    
+    <select id="getMemberInfoFor_MB_NUM" parameterType="Hashmap" resultType="Hashmap">    
+         SELECT MB_NICK, MB_NAME, MB_EMAIL, REG_DATE
+		,(SELECT COUNT(*) FROM REVIEW C_REVIEW WHERE MEMBER.MB_NUM = C_REVIEW.MB_NUM) REVIEW_COUNT
+		, DBMS_LOB.SUBSTR((SELECT WM_CONCAT(MB_KW_NAME) MB_KW_NAME FROM MEMBER_KEYWORD WHERE MEMBER.MB_NUM = MEMBER_KEYWORD.MB_NUM), 1000, 1) AS KW_NAME 
+		FROM MEMBER
+ 		 WHERE MB_NUM = #{MB_NUM}
+    </select>
+    
+    <insert id="InsertReview" parameterType="Hashmap" keyProperty="RV_NUM">
+    	<selectKey keyProperty="RV_NUM" resultType="int" order="BEFORE"> SELECT SEQ_REVIEW.NEXTVAL FROM DUAL </selectKey>
+
+		INSERT INTO REVIEW (RV_NUM,MB_NUM,RES_NUM,RV_DATE,RV_STAR,RV_CONTENT,RV_COMMENT,RV_DETAIL1,RV_DETAIL2,RV_DETAIL3,RV_DETAIL4, RES_NM,RES_DISTRIC,RES_MENU,RES_ADDRS,RES_PHOTO_URL)
+		VALUES (#{RV_NUM}, #{MB_NUM},#{RES_NUM},SYSDATE,#{RV_STAR},#{RV_CONTENT},#{RV_COMMENT},#{RV_DETAIL1},#{RV_DETAIL2},#{RV_DETAIL3},#{RV_DETAIL4},#{RES_NM},#{RES_DISTRIC},#{RES_MENU},#{RES_ADDRS},#{RES_PHOTO_URL})
+	</insert>
+	
+	<update id="UpdateReview" parameterType="Hashmap">
+		UPDATE REVIEW SET
+		RV_DATE = SYSDATE
+		,RV_STAR = #{RV_STAR}
+		,RV_CONTENT = #{RV_CONTENT}
+		,RV_COMMENT = #{RV_COMMENT}
+		,RV_DETAIL1 = #{RV_DETAIL1}
+		,RV_DETAIL2 = #{RV_DETAIL2}
+		,RV_DETAIL3 = #{RV_DETAIL3}
+		,RV_DETAIL4 = #{RV_DETAIL4}		
+		WHERE RV_NUM = #{RV_NUM}
+	</update>
+	
+	<update id="UpdateReview_user" parameterType="Hashmap">
+		UPDATE REVIEW SET
+		RV_DATE = SYSDATE
+		,RV_STAR = #{RV_STAR}
+		,RV_CONTENT = #{RV_CONTENT}
+		,RV_COMMENT = #{RV_COMMENT}
+		,RV_DETAIL1 = #{RV_DETAIL1}
+		,RV_DETAIL2 = #{RV_DETAIL2}
+		,RV_DETAIL3 = #{RV_DETAIL3}
+		,RV_DETAIL4 = #{RV_DETAIL4}		
+		WHERE RV_NUM = #{RV_NUM} AND MB_NUM = #{MB_NUM}
+	</update>
+	
+	<insert id="InsertReviewPhoto" parameterType="Hashmap" keyProperty="RV_PHOTO_NUM">
+    	<selectKey keyProperty="RV_PHOTO_NUM" resultType="int" order="BEFORE"> SELECT SEQ_REVIEW_PHOTO.NEXTVAL FROM DUAL </selectKey>
+
+		INSERT INTO REVIEW_PHOTO (RV_PHOTO_NUM,RV_NUM,RV_PHOTO_ORIGIN)
+		VALUES (#{RV_PHOTO_NUM}, #{RV_NUM},#{RV_PHOTO_ORIGIN})
+	</insert>
+	
+	<insert id="InsertMember" parameterType="Hashmap" keyProperty="RV_PHOTO_NUM">
+    	<selectKey keyProperty="MB_NUM" resultType="int" order="BEFORE"> SELECT SEQ_MEMBER.NEXTVAL FROM DUAL </selectKey>
+
+		INSERT INTO MEMBER (MB_NUM,MB_ID,MB_NICK,MB_NAME,MB_EMAIL,MB_PW,REG_DATE,TYPE)
+		VALUES (#{MB_NUM},#{MB_ID},#{MB_NICK},#{MB_NAME},#{MB_EMAIL},#{MB_PW},SYSDATE,#{TYPE})
+	</insert>
+	
+	<insert id="InsertMemberKeyWord" parameterType="Hashmap" keyProperty="RV_PHOTO_NUM">
+    	<selectKey keyProperty="MB_KW_NUM" resultType="int" order="BEFORE"> SELECT SEQ_MEMBER_KEYWORD.NEXTVAL FROM DUAL </selectKey>
+
+		INSERT INTO MEMBER_KEYWORD (MB_KW_NUM,MB_NUM,MB_KW_NAME)
+		VALUES (#{MB_KW_NUM},#{MB_NUM},#{MB_KW_NAME})
+	</insert>
+	
+	<update id="UpdateMemberPW" parameterType="Hashmap" >
+		UPDATE MEMBER SET
+			MB_PW = #{MB_PW}  
+		WHERE MB_ID = #{MB_ID}
+	</update>
+	
+	<update id="UpdateMember" parameterType="Hashmap" >
+		UPDATE MEMBER SET 
+			MB_NICK = #{param_nick_name}			
+			,MB_NAME = #{param_name} 
+			,MB_PW = #{pw_encode}  
+		WHERE MB_NUM = #{MB_NUM}
+	</update>
+	
+	<update id="UpdateMemberAdmin" parameterType="Hashmap" >
+		UPDATE MEMBER SET 
+			MB_NICK = #{param_nick_name}			
+			,MB_NAME = #{param_name}
+			,MB_EMAIL = #{param_email}
+			,MB_PW = #{pw_encode}  
+		WHERE MB_NUM = #{MB_NUM}
+	</update>
+	
+	<update id="ResetMemberKeyWord" parameterType="Hashmap" >
+		DELETE FROM MEMBER_KEYWORD WHERE MB_NUM = #{MB_NUM}
+	</update>
+	
+	<select id="admin_review_data" parameterType="Hashmap" resultType="Hashmap">  
+	<![CDATA[  
+		SELECT *
+		FROM
+		    (
+		        SELECT 
+		            ROWNUM AS RNUM, T1.*, T2.MB_ID, T2.MB_NICK, T2.MB_NAME
+		            ,TO_CHAR(T1.RV_DATE, 'YYYY-MM-DD') RV_DATE_STRING
+		        FROM
+		            REVIEW T1
+		            INNER JOIN MEMBER T2 ON T1.MB_NUM = T2.MB_NUM
+		        WHERE
+		            ROWNUM <= #{endpage}
+		            AND (T1.RES_NM like '%${search_string}%'
+		            OR T1.RV_CONTENT like '%${search_string}%'
+		            OR T1.RV_COMMENT like '%${search_string}%'
+		            OR T2.MB_ID like '%${search_string}%'
+		            OR T2.MB_NICK like '%${search_string}%'
+		            OR T2.MB_NAME like '%${search_string}%'
+		            )
+		    )
+		WHERE
+		    #{startpage} <= RNUM
+	]]>
+	  
+    </select>
+    
+    <select id="admin_member_data" parameterType="Hashmap" resultType="Hashmap">  
+	<![CDATA[  
+		SELECT *
+		FROM
+		    (
+		        SELECT 
+		            ROWNUM AS RNUM, T1.*		            
+		        FROM
+		            MEMBER T1		            
+		        WHERE
+		            ROWNUM <= #{endpage}
+		            AND (T1.MB_ID like '%${search_string}%'
+		            OR T1.MB_NICK like '%${search_string}%'
+		            OR T1.MB_NAME like '%${search_string}%'
+		            OR T1.MB_EMAIL like '%${search_string}%'		            
+		            )
+		    )
+		WHERE
+		    #{startpage} <= RNUM
+	]]>
+	  
+    </select>
+    
+    <delete id="remove_reivew" parameterType="Hashmap" >
+		DELETE FROM REVIEW WHERE RV_NUM = #{RV_NUM}
+	</delete>
+	
+	<delete id="remove_reivew_user" parameterType="Hashmap" >
+		DELETE FROM REVIEW WHERE RV_NUM = #{RV_NUM} and MB_NUM = #{MB_NUM}
+	</delete>
+    
+    <delete id="remove_reivew_image" parameterType="Hashmap" >
+		DELETE FROM REVIEW_PHOTO WHERE RV_PHOTO_NUM = #{RV_PHOTO_NUM}
+	</delete>
+	
+	<delete id="remove_reivew_image_user" parameterType="Hashmap" >
+		DELETE FROM REVIEW_PHOTO WHERE RV_PHOTO_NUM = #{RV_PHOTO_NUM} and
+		(SELECT MB_NUM FROM REVIEW WHERE REVIEW.RV_NUM = REVIEW_PHOTO.RV_NUM) = #{MB_NUM}
+	</delete>
+	
+	<delete id="remove_member" parameterType="Hashmap" >
+		DELETE FROM MEMBER WHERE MB_NUM = #{MB_NUM}
+	</delete>
+</mapper>

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans
+	xmlns="http://www.springframework.org/schema/security"
+	xmlns:beans="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:jee="http://www.springframework.org/schema/jee"
+	xmlns:security="http://www.springframework.org/schema/security"
+	xsi:schemaLocation="http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-4.2.xsd
+        http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-3.2.xsd
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd">
+
+	<http auto-config="true" use-expressions="false">
+		<intercept-url pattern="/" access="IS_AUTHENTICATED_ANONYMOUSLY" />
+		<intercept-url pattern="/member/**" access="IS_AUTHENTICATED_ANONYMOUSLY" />
+		<intercept-url pattern="/open/**" access="IS_AUTHENTICATED_ANONYMOUSLY" />
+		<intercept-url pattern="/user/**" access="ROLE_USER,ROLE_ADMIN" />
+		<intercept-url pattern="/admin/**" access="ROLE_ADMIN" />			
+		<intercept-url pattern="/resources/**" access="IS_AUTHENTICATED_ANONYMOUSLY" />
+		<form-login login-page="/member/login" username-parameter="id"
+			password-parameter="pw" login-processing-url="/member/login_process"
+			default-target-url="/" authentication-failure-url="/member/login_fail" />
+		<logout logout-success-url="/member/logout" />
+		<security:csrf disabled="true"/>
+	</http>
+
+	<beans:bean
+		class="org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler" />
+
+	<beans:bean id="encoder"
+		class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder">
+		<beans:constructor-arg name="strength"
+			value="11" />
+	</beans:bean>
+
+	<authentication-manager>
+		<authentication-provider
+			user-service-ref="MainService">
+			<password-encoder ref="encoder" />
+		</authentication-provider>
+	</authentication-manager>
+
+
+</beans:beans>
