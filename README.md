@@ -1,5 +1,5 @@
 # Credinner　信頼できるグルメサイト、クレディナ―
-
+![](logo.png)
 ![](main_page.png)
 
 ## 1. プロジェクト概要
