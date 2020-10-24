@@ -27,4 +27,4 @@
 * [Jacheol Ko](https://github.com/KOJAECHEOL) - User page
 * [Junwoo Kim](https://github.com/kjwit) - Review Rating feature
 * [Nakyoung Lee](https://github.com/nakyounglee06) - Review create, delete, update feature
-* [Junga Lim](https://github.com/Junga-Im) - Join page
+* [Junga Lim](https://github.com/Junga-Im) - Join page, SMTP E-mail sender
