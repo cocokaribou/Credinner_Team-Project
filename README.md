@@ -18,4 +18,4 @@
 * API: ソウル特別市公共データ、Google Maps Places API, SMTP API
 
 ## 4. 開発工程
-![](./사용자/Youngin Lee/바탕화면/Kleptomanie/2020/3.Q3/開発工程図.png)
+![](開発工程図.png)
