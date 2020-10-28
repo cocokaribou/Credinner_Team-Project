@@ -21,3 +21,10 @@
 
 ## 4. 開発工程
 ![](開発工程図.png)
+
+## 5. Teammates
+* [Youngin Lee](https://github.com/cocokaribou) - Team Leader, Search Feature using Seoul public API
+* [Jacheol Ko](https://github.com/KOJAECHEOL) - User page
+* [Junwoo Kim](https://github.com/kjwit) - Review Rating feature
+* [Nakyoung Lee](https://github.com/nakyounglee06) - Review create, delete, update feature
+* [Junga Lim](https://github.com/Junga-Im) - Join page, SMTP E-mail sender
