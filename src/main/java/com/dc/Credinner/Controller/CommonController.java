@@ -287,7 +287,7 @@ public class CommonController {
 							if(node2.getNodeName().equals("photo")) 
 							{
 								NodeList childeren3 = node2.getChildNodes();
-								for(int k=0; k < childeren3.getLength(); k++) {
+								for(int k=0; k < childeren3.getLength(); k++) {	
 									Node node3 = childeren3.item(k);
 									if(node3.getNodeName().equals("photo_reference")) 
 									{										
